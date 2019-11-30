@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "npiper-rest-reference.fullname" . }}
+  labels:
+    {{- include "npiper-rest-reference.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "npiper-rest-reference.selectorLabels" . | nindent 4 }}
