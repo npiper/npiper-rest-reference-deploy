@@ -1,0 +1,13 @@
+[all:vars]
+aws_region="eu-west-1"
+context="testing"
+ecs_cluster="ecs_cluster"
+domain_name="dev.neilpiper.me"
+docker_task_family=plantuml
+docker_image_version=plantuml/plantuml-server:jetty
+docker_image_name=plantuml
+docker_image_containerport=8080
+docker_image_ecsport=80
+docker_image_cpu=512
+docker_image_memory=500
+docker_instance_count=2

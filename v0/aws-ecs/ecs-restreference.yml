@@ -33,37 +33,36 @@
 # TaskDefinition
   - name: Create TaskDefinition
     ecs_taskdefinition:
-     family: plantuml
+     family: "{{ docker_task_family }}"
      containers:
-     - name: plantuml
+     - name: "{{ docker_image_name }}"
        essential: true
-       image: "plantuml/plantuml-server:jetty"
+       image: "{{ docker_image_version }}"
        portMappings:
-       - containerPort: 8080
-         hostPort:      80
-       cpu: 512
-       memory: 500
+       - containerPort: "{{ docker_image_containerport }}"
+         hostPort: "{{ docker_image_ecsport }}"
+       cpu: "{{ docker_image_cpu }}"
+       memory: "{{ docker_image_memory }}"
      state: present
-    register: plant_taskdef
+    register: docker_taskdef
 
   - name: create ECS service on VPC network
     ecs_service:
       state: present
-      name: plantuml-service
-      cluster: ecs_cluster
+      name: "{{ docker_image_name }}-service"
+      cluster: "{{ ecs_cluster }}"
       region: "{{ aws_region }}"
       delay: 10
-      task_definition: 'plantuml:{{ plant_taskdef.taskdefinition.revision }}'
-      desired_count: 2
+      task_definition: '{{ docker_image_name }}:{{ docker_taskdef.taskdefinition.revision }}'
+      desired_count: "{{ docker_instance_count }}"
       launch_type: EC2
 
 
   - name: Run task
     ecs_task:
       operation: run
-      cluster: ecs_cluster
-      task_definition: plantuml
+      cluster: "{{ ecs_cluster }}"
+      task_definition: "{{ docker_image_name }}"
       count: 1
       started_by: ansible_user
     register: task_output
-
