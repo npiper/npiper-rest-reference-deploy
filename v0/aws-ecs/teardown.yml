@@ -1,0 +1,45 @@
+# ecs_service
+# Simple example to delete
+
+- name: CREATE AWS ENVIRONMENT
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+# This playbook sets up an Amazon Container environment
+  tasks:
+  # Gather facts about any VPC with a tag key Name and value Example
+  - name: Get matching VPC
+    ec2_vpc_net_facts:
+      region: "{{ aws_region }}"
+      filters:
+        "tag:domain_name": "{{ domain_name }}"
+    register: avpc
+
+    name: Get service information
+  - ecs_service_info:
+      cluster: "{{ ecs_cluster }}"
+      service: "{{ docker_image_name }}-service"
+      details: true
+    register: ecs_service_info
+
+  - debug:
+      msg: "Task Definition {{ ecs_service_info.services[0].taskDefinition.split('/')[1] }}"
+
+  - name: Scale service down to 0
+    ecs_service:
+      state: present
+      name: "{{ docker_image_name }}-service"
+      cluster: "{{ ecs_cluster }}"
+      region: "{{ aws_region }}"
+      force_new_deployment: false
+      delay: 10
+      task_definition: "{{ ecs_service_info.services[0].taskDefinition.split('/')[1] }}"
+      desired_count: 0
+      launch_type: EC2
+
+    name: "Remove service {{ docker_image_name }}-service"
+  - ecs_service:
+      name: "{{ docker_image_name }}-service"
+      state: absent
+      cluster: "{{ ecs_cluster }}"
