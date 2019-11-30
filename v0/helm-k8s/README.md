@@ -41,6 +41,17 @@ helm install stable/rabbitmq --generate-name
 helm create npiper-rest-reference
 ```
 
+# Install it
+
+```
+helm install npiper-rest-reference ./npiper-rest-reference
+
+// Get the port
+kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services npiper-rest-reference
+```
+
+Then go to `http://localhost:{port}/depot/10001/inventory_summaries`
+
 # References
 
 https://www.baeldung.com/kubernetes-helm

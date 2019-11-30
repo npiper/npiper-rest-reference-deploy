@@ -1,7 +1,7 @@
 apiVersion: v2
 name: npiper-rest-reference
-description: A Helm chart for Kubernetes
-
+description: A Helm chart for a Spring Boot rest reference
+icon: https://miro.medium.com/max/400/1*YqUFm6GskPbc58i_Bj_czw.jpeg
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives

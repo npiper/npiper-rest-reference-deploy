@@ -3,7 +3,10 @@ kind: Service
 metadata:
   name: {{ include "npiper-rest-reference.fullname" . }}
   labels:
-    {{- include "npiper-rest-reference.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "npiper-rest-reference.name" . }}
+    helm.sh/chart: {{ include "npiper-rest-reference.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,4 +15,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "npiper-rest-reference.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "npiper-rest-reference.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
